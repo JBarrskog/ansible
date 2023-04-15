@@ -1,0 +1,39 @@
+---
+- name: Find current sshd ssh-keys
+  find:
+    paths: /etc/ssh
+    patterns: "ssh_host_*"
+    use_regex: true
+  register: current_ssh_keys
+
+- name: Check for ssh-regen breadcrumb
+  stat:
+    path: /etc/ssh/.sshkeys_generated_by_ansible
+  register: already_hardened
+
+- name: Remove previously generated keys
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ current_ssh_keys.files }}"
+  when: not already_hardened.stat.exists
+  notify: restart sshd
+
+- name: Generate a RSA-key of 4096 bytes
+  community.crypto.openssh_keypair:
+    path: /etc/ssh/ssh_host_rsa_key
+  when: not already_hardened.stat.exists
+  notify: restart sshd
+
+- name: Generate a ED25519-key of 4096 bytes
+  community.crypto.openssh_keypair:
+    path: /etc/ssh/ssh_host_ed25519_key
+  when: not already_hardened.stat.exists
+  notify: restart sshd
+
+- name: Create breadcrumb to prevent re-re-generation of keys
+  file:
+    path: /etc/ssh/.sshkeys_generated_by_ansible
+    state: touch
+  when: not already_hardened.stat.exists
+  notify: restart sshd

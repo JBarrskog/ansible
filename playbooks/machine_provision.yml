@@ -1,0 +1,31 @@
+---
+- hosts: all
+  become: yes
+
+  pre_tasks:
+    - name: Update apt cache if needed
+      apt: 
+        update_cache: yes 
+        cache_valid_time: 3600
+
+  handlers:
+    - name: restart qemu-guest-agent
+      service: 
+        name: qemu-guest-agent
+        state: restarted
+
+  tasks:
+    - name: Upgrade all packages
+      ansible.builtin.package:
+        name: "*"
+        state: latest
+
+    - name: Install QEMU Guest Agent
+      package:
+        name: qemu-guest-agent
+        state: latest
+      notify: restart qemu-guest-agent
+
+    - import_tasks: ../tasks/locale.yml
+
+    - import_tasks: ../tasks/hardening.yml

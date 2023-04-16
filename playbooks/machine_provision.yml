@@ -15,10 +15,11 @@
         state: restarted
 
   tasks:
-    - name: Upgrade all packages
-      ansible.builtin.package:
+    - name: Upgrade all packages (apt)
+      apt:
         name: "*"
         state: latest
+      when: ansible_facts['os_family'] == "Debian"
 
     - name: Install QEMU Guest Agent
       package:

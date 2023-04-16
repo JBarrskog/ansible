@@ -7,13 +7,49 @@
    os_auth_pw_max: 90
    os_auth_pw_warn_age: 30
    ssh_server_ports: ["{{ ansible_port }}"]
-   ssh_client_ports: "{{ ansible_port }}"
+   ssh_client_port: "{{ ansible_port }}"
    # The following settings are per https://sshaudit.com/hardening_guides
-   ssh_host_key_files: ["/etc/ssh/ssh_host_rsa_key","/etc/ssh/ssh_host_ed25519_key"]
-   ssh_kex: ["sntrup761x25519-sha512@openssh.com","curve25519-sha256","curve25519-sha256@libssh.org","gss-curve25519-sha256-","diffie-hellman-group16-sha512","gss-group16-sha512-","diffie-hellman-group18-sha512","diffie-hellman-group-exchange-sha256"]
-   ssh_ciphers: ["chacha20-poly1305@openssh.com","aes256-gcm@openssh.com","aes128-gcm@openssh.com","aes256-ctr","aes192-ctr","aes128-ctr"]
-   ssh_macs: ["hmac-sha2-256-etm@openssh.com","hmac-sha2-512-etm@openssh.com","umac-128-etm@openssh.com"]
-   ssh_host_key_algorithms: ["ssh-ed25519","ssh-ed25519-cert-v01@openssh.com","sk-ssh-ed25519@openssh.com","sk-ssh-ed25519-cert-v01@openssh.com","rsa-sha2-512","rsa-sha2-512-cert-v01@openssh.com","rsa-sha2-256","rsa-sha2-256-cert-v01@openssh.com"]
+   ssh_host_key_files: 
+     - /etc/ssh/ssh_host_rsa_key
+     - /etc/ssh/ssh_host_ed25519_key
+   ssh_kex: 
+     - sntrup761x25519-sha512@openssh.com
+     - curve25519-sha256
+     - curve25519-sha256@libssh.org
+     - gss-curve25519-sha256-
+     - diffie-hellman-group16-sha512
+     - gss-group16-sha512-
+     - diffie-hellman-group18-sha512
+     - diffie-hellman-group-exchange-sha256
+   ssh_ciphers: 
+     - chacha20-poly1305@openssh.com
+     - aes256-gcm@openssh.com
+     - aes128-gcm@openssh.com
+     - aes256-ctr
+     - aes192-ctr
+     - aes128-ctr
+   ssh_macs: 
+     - hmac-sha2-256-etm@openssh.com
+     - hmac-sha2-512-etm@openssh.com
+     - umac-128-etm@openssh.com
+   ssh_host_key_algorithms: 
+     - ssh-ed25519
+     - ssh-ed25519-cert-v01@openssh.com
+     - sk-ssh-ed25519@openssh.com
+     - sk-ssh-ed25519-cert-v01@openssh.com
+     - rsa-sha2-512
+     - rsa-sha2-512-cert-v01@openssh.com
+     - rsa-sha2-256
+     - rsa-sha2-256-cert-v01@openssh.com
+   ssh_client_host_key_algorithms: 
+     - ssh-ed25519
+     - ssh-ed25519-cert-v01@openssh.com
+     - sk-ssh-ed25519@openssh.com
+     - sk-ssh-ed25519-cert-v01@openssh.com
+     - rsa-sha2-512
+     - rsa-sha2-512-cert-v01@openssh.com
+     - rsa-sha2-256
+     - rsa-sha2-256-cert-v01@openssh.com
 
 - name: include base_config
   include_role:

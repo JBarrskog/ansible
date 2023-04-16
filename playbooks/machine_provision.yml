@@ -1,12 +1,13 @@
 ---
 - hosts: all
   become: yes
+  # gather_facts will fail under some circumstances related to the ansible_port != 22, and the ssh-port being 22 on
+  # unconfigured systems. The rule 'change-sshd-port' will gather the facts as its last task
+  gather_facts: false 
 
-  pre_tasks:
-    - name: Update apt cache if needed
-      apt: 
-        update_cache: yes 
-        cache_valid_time: 3600
+  roles:
+    - role: ../roles/change-sshd-port
+      become: no
 
   handlers:
     - name: restart qemu-guest-agent
@@ -15,6 +16,11 @@
         state: restarted
 
   tasks:
+    - name: Update apt cache if needed
+      apt: 
+        update_cache: yes 
+        cache_valid_time: 3600
+
     - name: Upgrade all packages (apt)
       apt:
         name: "*"

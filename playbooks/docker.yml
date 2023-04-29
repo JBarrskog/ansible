@@ -1,0 +1,25 @@
+- hosts: docker
+  become: true
+  vars:
+    docker_users: 
+      - docker
+
+  tasks:
+    - name: Create unpriviledged user for Docker
+      ansible.builtin.user:
+        name: "{{ item }}"
+        shell: /bin/bash
+      become: true
+      loop: "{{ docker_users }}"
+
+    - name: Create docker-directory
+      ansible.builtin.file:
+        name: "/home/{{ item }}/docker"
+        state: directory
+        mode: '0700'
+        owner: "{{ item }}"
+        group: "{{ item }}"
+      loop: "{{ docker_users }}"
+
+    - include_role: 
+        name: geerlingguy.docker

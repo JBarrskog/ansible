@@ -6,6 +6,7 @@
   set_fact: 
    os_auth_pw_max: 90
    os_auth_pw_warn_age: 30
+   sftp_enabled: true
    ssh_server_ports: ["{{ ansible_port }}"]
    ssh_client_port: "{{ ansible_port }}"
    # The following settings are per https://sshaudit.com/hardening_guides
